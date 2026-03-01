@@ -1,6 +1,6 @@
 {
   "name": "SIO2 - Docker-in-Docker (sidecar)",
-  "dockerComposeFile": ".devcontainer/docker-compose.yml",
+  "dockerComposeFile": "docker-compose.yml",
   "service": "dev",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "runServices": ["dind", "dev"],
