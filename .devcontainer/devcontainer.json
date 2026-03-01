@@ -1,0 +1,38 @@
+{
+  "name": "SIO2 - Docker-in-Docker (sidecar)",
+  "dockerComposeFile": ".devcontainer/docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "runServices": ["dind", "dev"],
+  "shutdownAction": "stopCompose",
+  "remoteUser": "vscode",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "username": "vscode",
+      "userUid": "1000",
+      "userGid": "1000"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "enableNonRootDocker": true,
+      "moby": false,
+      "installDocker": true
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "editorconfig.editorconfig"
+      ],
+      "settings": {
+        "files.eol": "\n",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "postCreateCommand": "chmod +x .devcontainer/scripts/wait-for-docker.sh",
+  "postStartCommand": ".devcontainer/scripts/wait-for-docker.sh",
+  "updateRemoteUserUID": true
+}

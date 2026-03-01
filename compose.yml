@@ -1,0 +1,22 @@
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    volumes:
+      - ./html:/usr/share/nginx/html:ro
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?set in .env}
+      MARIADB_DATABASE: ${DB_NAME:-app}
+      MARIADB_USER: ${DB_USER:-user}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-pass}
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:

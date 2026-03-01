@@ -1,0 +1,39 @@
+services:
+  # Daemon Docker isolé (DinD)
+  dind:
+    image: docker:27-dind
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: ""     # désactive TLS pour simplicité en local
+    volumes:
+      - dind-data:/var/lib/docker
+    networks:
+      - dindnet
+    healthcheck:
+      test: ["CMD", "sh", "-c", "docker info > /dev/null 2>&1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  # Conteneur de DEV (où les élèves codent)
+  dev:
+    image: mcr.microsoft.com/devcontainers/base:ubuntu
+    depends_on:
+      dind:
+        condition: service_healthy
+    environment:
+      # Pointer le client Docker vers le daemon DinD
+      DOCKER_HOST: tcp://dind:2375
+      DOCKER_BUILDKIT: "1"
+      COMPOSE_DOCKER_CLI_BUILD: "1"
+    volumes:
+      - ..:/workspaces:cached
+    networks:
+      - dindnet
+    command: sleep infinity
+
+volumes:
+  dind-data:
+
+networks:
+  dindnet:
